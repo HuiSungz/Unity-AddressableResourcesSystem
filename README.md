@@ -4,7 +4,7 @@
 ![Static Badge](https://img.shields.io/badge/UNITY-2022.3%2B-blue?style=for-the-badge&logo=unity)
 ![Static Badge](https://img.shields.io/badge/DEPENDENCIES-UniTask--Addressables-green?style=for-the-badge&logo=unity)
 
-[![Static Badge](https://img.shields.io/badge/ARM-Wiki-orange?style=for-the-badge)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
+[![Static Badge](https://img.shields.io/badge/ARM-Wiki-orange?style=for-the-badge&logo=gitbook)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
 ![Static Badge](https://img.shields.io/badge/ARM-ENGLISH-orange?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/LICENSE-MIT-MIT?style=for-the-badge)
 
@@ -23,7 +23,8 @@ ARM(Addressable Resources Management)은 Unity의 Addressables 패키지 확장 
 - [설치 방법](#설치-방법)
   - [의존성](#의존성)
 - [주요 기능](#주요-기능)
-- [문서](#문서)
+- [📝 문서](#-문서)
+- [컨택트](#컨택트)
 - [라이센스](#라이센스)
 
 ## 설치 방법
@@ -45,7 +46,7 @@ https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
 > 혹여 설치가 잘못 되었을 시 재설치 또는 리임포트를 합니다.<br>
 > 정상적인 설치가 완료되면 심볼에 `ARM_UNITASK`가 추가되고 클래스에 접근할 수 있습니다.
 
-## 문서
+## 📝 문서
 - 정규화된 문서 및 사용 방법은 `Wiki`페이지를 확인하면 손쉽게 확인할 수 있습니다.
 - [ARM-Documentation-Wiki](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
 
@@ -56,6 +57,13 @@ https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
   - 사용자는 미러링을 통해 사용하지 않는 엔트리를 소멸자 또는 이벤트에서 반환만 하면 됨
 - 레퍼런스 트래킹: 에셋 사용 현황을 실시간으로 확인 가능한 디버깅 툴
 - 타입 안정성: 제네릭 기반의 타입 API를 제공
+
+## 컨택트
+- 이슈 & 버그 리포트: [GitHub Issues](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/issues)
+- 이메일: gmltjd0910@gmail.com | huisung@actionfit.kr
+
+> 버그를 발견하거나 기능 요청이 있을 경우 GitHub Issue에 오픈해주세요.<br>
+> 일반적인 질문이나 도움이 필요하시면 이메일을 통해 연락 부탁드립니다.
 
 ## 라이센스
 This library is under the MIT License.
