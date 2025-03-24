@@ -47,7 +47,7 @@ https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
 > 정상적인 설치가 완료되면 심볼에 `ARM_UNITASK`가 추가되고 클래스에 접근할 수 있습니다.
 
 ## 📝 문서
-- 정규화된 문서 및 사용 방법은 `Wiki`페이지를 확인하면 손쉽게 확인할 수 있습니다.
+- 정규화된 문서 및 사용 방법은 `Wiki`페이지를 통해 손쉽게 확인할 수 있습니다.
 - [ARM-Documentation-Wiki](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
 
 ## 주요 기능
