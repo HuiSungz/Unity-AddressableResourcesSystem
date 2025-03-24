@@ -62,18 +62,15 @@ namespace AddressableManage.Editor
                 {
                     // Add scopedRegistries section
                     string openUpmRegistry = @",
-  ""scopedRegistries"": [
-    {
-      ""name"": ""package.openupm.com"",
-      ""url"": ""https://package.openupm.com"",
-      ""scopes"": [
-        ""com.cysharp"",
-        ""com.neuecc"",
-        ""com.unity"",
-        ""jp.cysharp""
-      ]
-    }
-  ]";
+                  ""scopedRegistries"": [
+                    {
+                      ""name"": ""package.openupm.com"",
+                      ""url"": ""https://package.openupm.com"",
+                      ""scopes"": [
+                        ""com.cysharp""
+                      ]
+                    }
+                  ]";
                     
                     // Insert before the last closing brace
                     int lastBraceIndex = manifestContent.LastIndexOf('}');
@@ -94,16 +91,13 @@ namespace AddressableManage.Editor
                         if (arrayStart >= 0)
                         {
                             string openUpmRegistry = @"
-    {
-      ""name"": ""package.openupm.com"",
-      ""url"": ""https://package.openupm.com"",
-      ""scopes"": [
-        ""com.cysharp"",
-        ""com.neuecc"",
-        ""com.unity"",
-        ""jp.cysharp""
-      ]
-    },";
+                            {
+                              ""name"": ""package.openupm.com"",
+                              ""url"": ""https://package.openupm.com"",
+                              ""scopes"": [
+                                ""com.cysharp""
+                              ]
+                            },";
                             
                             // Insert after the opening bracket
                             manifestContent = manifestContent.Insert(arrayStart + 1, openUpmRegistry);
