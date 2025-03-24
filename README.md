@@ -4,8 +4,8 @@
 ![Static Badge](https://img.shields.io/badge/UNITY-2022.3%2B-blue?style=for-the-badge&logo=unity)
 ![Static Badge](https://img.shields.io/badge/DEPENDENCIES-UniTask--Addressables-green?style=for-the-badge&logo=unity)
 
-[![Static Badge](https://img.shields.io/badge/ARM-Wiki-blue?style=for-the-badge)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
-![Static Badge](https://img.shields.io/badge/ARM-ENGLISH-blue?style=for-the-badge)
+[![Static Badge](https://img.shields.io/badge/ARM-Wiki-orange?style=for-the-badge)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
+![Static Badge](https://img.shields.io/badge/ARM-ENGLISH-orange?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/LICENSE-MIT-MIT?style=for-the-badge)
 
 <p align="center">
