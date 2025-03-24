@@ -1,9 +1,12 @@
 # <img alt="ARM-Icon" src="https://imgur.com/zdGDYCN.png" width="26"/> Addressable Resources Management
 
 ![GitHub Release](https://img.shields.io/github/v/release/HuiSungz/Unity-AddressableResourcesSystem?display_name=release&style=for-the-badge&logo=github)
-![Static Badge](https://img.shields.io/badge/LICENSE-MIT-MIT?style=for-the-badge)
 ![Static Badge](https://img.shields.io/badge/UNITY-2022.3%2B-blue?style=for-the-badge&logo=unity)
 ![Static Badge](https://img.shields.io/badge/DEPENDENCIES-UniTask--Addressables-green?style=for-the-badge&logo=unity)
+
+[![Static Badge](https://img.shields.io/badge/ARM-Wiki-blue?style=for-the-badge)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
+![Static Badge](https://img.shields.io/badge/ARM-ENGLISH-blue?style=for-the-badge)
+![Static Badge](https://img.shields.io/badge/LICENSE-MIT-MIT?style=for-the-badge)
 
 <p align="center">
   <img alt="ARM-MainTitle" src="https://imgur.com/0wBjlUx.png" width="400"/>
@@ -44,6 +47,7 @@ https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
 
 ## 문서
 - 정규화된 문서 및 사용 방법은 `Wiki`페이지를 확인하면 손쉽게 확인할 수 있습니다.
+- [ARM-Documentation-Wiki](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
 
 ## 주요 기능
 - 비동기 로딩 시스템: UniTask 기반의 빠르고 효율적인 비동기 로딩
