@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEditor.PackageManager;
+using UnityEditor.PackageManager.Requests;
 
 namespace AddressableManage.Editor
 {
@@ -16,9 +18,13 @@ namespace AddressableManage.Editor
         private const string UNITASK_PACKAGE_NAME = "com.cysharp.unitask";
         private const string MANIFEST_PATH = "Packages/manifest.json";
         private const string SCOPED_REGISTRY_NAME = "package.openupm.com";
+        
+        // 패키지 리퀘스트와 콜백 처리를 위한 필드
+        private ListRequest _listRequest;
+        private Action<bool> _onPackageCheckComplete;
 
         /// <summary>
-        /// Check if UniTask is installed
+        /// Check if UniTask is installed (in manifest)
         /// </summary>
         public bool IsUniTaskInstalled()
         {
@@ -62,15 +68,15 @@ namespace AddressableManage.Editor
                 {
                     // Add scopedRegistries section
                     string openUpmRegistry = @",
-                  ""scopedRegistries"": [
-                    {
-                      ""name"": ""package.openupm.com"",
-                      ""url"": ""https://package.openupm.com"",
-                      ""scopes"": [
-                        ""com.cysharp""
-                      ]
-                    }
-                  ]";
+  ""scopedRegistries"": [
+    {
+      ""name"": ""package.openupm.com"",
+      ""url"": ""https://package.openupm.com"",
+      ""scopes"": [
+        ""com.cysharp""
+      ]
+    }
+  ]";
                     
                     // Insert before the last closing brace
                     int lastBraceIndex = manifestContent.LastIndexOf('}');
@@ -91,13 +97,13 @@ namespace AddressableManage.Editor
                         if (arrayStart >= 0)
                         {
                             string openUpmRegistry = @"
-                            {
-                              ""name"": ""package.openupm.com"",
-                              ""url"": ""https://package.openupm.com"",
-                              ""scopes"": [
-                                ""com.cysharp""
-                              ]
-                            },";
+    {
+      ""name"": ""package.openupm.com"",
+      ""url"": ""https://package.openupm.com"",
+      ""scopes"": [
+        ""com.cysharp""
+      ]
+    },";
                             
                             // Insert after the opening bracket
                             manifestContent = manifestContent.Insert(arrayStart + 1, openUpmRegistry);
@@ -153,6 +159,118 @@ namespace AddressableManage.Editor
             }
             
             return false;
+        }
+
+        /// <summary>
+        /// UniTask 패키지가 실제로 설치되었는지 비동기적으로 확인
+        /// </summary>
+        public void CheckUniTaskInstallationAsync(Action<bool> onComplete)
+        {
+            _onPackageCheckComplete = onComplete;
+            _listRequest = Client.List();
+            EditorApplication.update += CheckPackageProgress;
+        }
+        
+        private void CheckPackageProgress()
+        {
+            if (_listRequest == null || !_listRequest.IsCompleted)
+                return;
+                
+            EditorApplication.update -= CheckPackageProgress;
+            
+            bool isInstalled = false;
+            
+            if (_listRequest.Status == StatusCode.Success)
+            {
+                foreach (var package in _listRequest.Result)
+                {
+                    if (package.name == UNITASK_PACKAGE_NAME)
+                    {
+                        isInstalled = true;
+                        break;
+                    }
+                }
+            }
+            
+            _onPackageCheckComplete?.Invoke(isInstalled);
+            _onPackageCheckComplete = null;
+            _listRequest = null;
+        }
+        
+        /// <summary>
+        /// UniTask 패키지를 설치하고 설치가 완료될 때까지 기다림
+        /// </summary>
+        public void InstallUniTaskPackageAsync(Action<bool> onComplete)
+        {
+            // OpenUPM 레지스트리가 구성되어 있는지 확인
+            if (!IsOpenUPMRegistryConfigured())
+            {
+                bool registryAdded = AddOpenUPMRegistry();
+                if (!registryAdded)
+                {
+                    Debug.LogError("Failed to configure OpenUPM registry.");
+                    onComplete?.Invoke(false);
+                    return;
+                }
+            }
+            
+            // 패키지 추가
+            if (!IsUniTaskInstalled())
+            {
+                bool packageAdded = AddUniTaskPackage();
+                if (!packageAdded)
+                {
+                    Debug.LogError("Failed to add UniTask package to manifest.");
+                    onComplete?.Invoke(false);
+                    return;
+                }
+            }
+            
+            // 패키지가 설치될 때까지 주기적으로 확인
+            StartPackageInstallationCheck(onComplete);
+        }
+        
+        private void StartPackageInstallationCheck(Action<bool> onComplete, int maxRetries = 10)
+        {
+            int retryCount = 0;
+            bool checkingInstallation = true;
+            
+            EditorApplication.update += CheckInstallation;
+            
+            void CheckInstallation()
+            {
+                if (!checkingInstallation)
+                    return;
+                    
+                // 일정 간격으로 확인 (약 1초마다)
+                if (EditorApplication.timeSinceStartup % 1 < 0.02)
+                {
+                    CheckUniTaskInstallationAsync((installed) => {
+                        if (installed)
+                        {
+                            // 설치 완료!
+                            StopChecking(true);
+                        }
+                        else
+                        {
+                            retryCount++;
+                            if (retryCount >= maxRetries)
+                            {
+                                // 최대 재시도 횟수 초과
+                                Debug.LogWarning($"UniTask package installation check timed out after {maxRetries} attempts.");
+                                StopChecking(false);
+                            }
+                        }
+                    });
+                }
+            }
+            
+            void StopChecking(bool success)
+            {
+                checkingInstallation = false;
+                EditorApplication.update -= CheckInstallation;
+                onComplete?.Invoke(success);
+            }
         }
 
         /// <summary>
