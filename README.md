@@ -5,65 +5,74 @@
 ![Static Badge](https://img.shields.io/badge/DEPENDENCIES-UniTask--Addressables-green?style=for-the-badge&logo=unity)
 
 [![Static Badge](https://img.shields.io/badge/ARM-Wiki-orange?style=for-the-badge&logo=gitbook)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
-![Static Badge](https://img.shields.io/badge/ARM-ENGLISH-orange?style=for-the-badge)
+[![Static Badge](https://img.shields.io/badge/ARM-한국어-orange?style=for-the-badge)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/blob/main/README-kr.md)
 ![Static Badge](https://img.shields.io/badge/LICENSE-MIT-MIT?style=for-the-badge)
 
 <p align="center">
   <img alt="ARM-MainTitle" src="https://imgur.com/0wBjlUx.png" width="400"/>
 </p>
 
-## 📌 소개
-ARM(Addressable Resources Management)은 Unity의 Addressables 패키지 확장 유틸리티입니다.
+## 📌 Introduction
 
-기존 어드레서블의 단점인 핸들관리 요소를 래핑하여 최대한 자동으로 관리해주는 시스템입니다
+ARM(Addressable Resources Management) is an extension utility for Unity's Addressables package.
 
-또한 리소스 로딩, 캐싱, 메모리 관리 등을 단순화 하여 게임 개발의 성능과 편의성을 제공합니다.
+It's a system that wraps the handle management elements, which are a drawback of the existing addressables, to automate management as much as possible.
 
-## 📌 목차
-- [설치 방법](#설치-방법)
-  - [의존성](#의존성)
-- [주요 기능](#주요-기능)
-- [📝 문서](#-문서)
-- [컨택트](#컨택트)
-- [라이센스](#라이센스)
+It also simplifies resource loading, caching, and memory management to provide performance and convenience for game development.
 
-## 설치 방법
-- Unity 2019.3 이상 버전부터는 `Package Manager`를 통한 Git URL로 설치가 가능합니다.
+## 📌 Table of contents
 
-  1. Unity Editor에서 `Window -> Package Manager` 열기
-  2. 좌측 상단에 `+` 버튼 클릭 후 `Add package from git URL...` 선택
-  3. 아래 URL을 입력한 후 `Add` 버튼 클릭
+- [Install via Git](#install-via-git)
+  - [Dependencies](#dependencies)
+- [📝 Documentation](#-documentation)
+- - [Key Features](#key-features)
+- [Contact](#contact)
+- [License](#license)
+
+## Install via Git
+
+- For Unity 2019.3 and above, you can install via Git URL using the `Package Manager`
+
+  1. Open `Window -> Package Manager` in Unity Editor
+  2. Click the `+` button in the top left and select `Add package from git URL...`
+  3. Enter the URL below and click the `Add` button
  
 ```
 https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
 ```
 
-### 의존성
-- ARM 프레임워크는 다음 패키지에 대한 의존성이 존재합니다.
+### Dependencies
+
+- The ARM framework has dependencies on the following packages:
   - Unity Addressables : `2.3.16`
   - UniTask : `Latest`
-> 패키지 설치 시 자동으로 필요한 의존성을 감지해 설치합니다.<br>
-> 혹여 설치가 잘못 되었을 시 재설치 또는 리임포트를 합니다.<br>
-> 정상적인 설치가 완료되면 심볼에 `ARM_UNITASK`가 추가되고 클래스에 접근할 수 있습니다.
+> The package automatically detects and installs the necessary dependencies during installation.<br>
+> If installation fails, reinstall or reimport the package.<br>
+> When installation is completed successfully, <br>
+> the symbol ARM_UNITASK will be added and you can access the classes.
 
-## 📝 문서
-- 정규화된 문서 및 사용 방법은 `Wiki`페이지를 통해 손쉽게 확인할 수 있습니다.
+## 📝 Documentation
+
+- Standardized documentation and usage instructions can be easily found through the `Wiki` page.
 - [ARM-Documentation-Wiki](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
 
-## 주요 기능
-- 비동기 로딩 시스템: UniTask 기반의 빠르고 효율적인 비동기 로딩
-- 자동 캐싱 매커니즘: 한 번이라도 캐싱된 에셋은 중복 로딩을 방지
-- 메모리 관리: AssetEntry를 통한 참조 카운팅 기반의 메모리 관리 시스템
-  - 사용자는 미러링을 통해 사용하지 않는 엔트리를 소멸자 또는 이벤트에서 반환만 하면 됨
-- 레퍼런스 트래킹: 에셋 사용 현황을 실시간으로 확인 가능한 디버깅 툴
-- 타입 안정성: 제네릭 기반의 타입 API를 제공
+## Key Features
 
-## 컨택트
-- 이슈 & 버그 리포트: [GitHub Issues](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/issues)
-- 이메일: gmltjd0910@gmail.com | huisung@actionfit.kr
+- Asynchronous Loading System: Fast and efficient asynchronous loading based on UniTask
+- Automatic Caching Mechanism: Prevents duplicate loading of assets that have been cached at least once
+- Memory Management: Reference counting-based memory management system through AssetEntry
+  - Users only need to return unused entries through mirroring in destructors or events
+- Reference Tracking: Debugging tool for real-time monitoring of asset usage
+- Type Safety: Provides type-safe APIs based on generics
 
-> 버그를 발견하거나 기능 요청이 있을 경우 GitHub Issue에 오픈해주세요.<br>
-> 일반적인 질문이나 도움이 필요하시면 이메일을 통해 연락 부탁드립니다.
+## Contact
 
-## 라이센스
+- Issues & Bug Report: [GitHub Issues](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/issues)
+- Email: gmltjd0910@gmail.com | huisung@actionfit.kr
+
+> If you find a bug or have a feature request, please open an issue on GitHub.<br>
+> For general questions or if you need help, please contact via email.
+
+## License
+
 This library is under the MIT License.
