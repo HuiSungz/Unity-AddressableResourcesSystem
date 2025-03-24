@@ -333,7 +333,7 @@ namespace AddressableManage.Editor
                 
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 
-                // 핸들 테이블 헤더
+                // handle table header
                 EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
                 GUILayout.Label("Resource Location", _headerStyle, GUILayout.Width(250));
                 GUILayout.Label("Status", _headerStyle, GUILayout.Width(100));
@@ -341,7 +341,7 @@ namespace AddressableManage.Editor
                 GUILayout.Label("Percent Complete", _headerStyle, GUILayout.Width(100));
                 EditorGUILayout.EndHorizontal();
                 
-                // 핸들 항목
+                // handle row
                 int index = 0;
                 foreach (var handlePair in _selectedEntry.HandleMap)
                 {
@@ -350,14 +350,14 @@ namespace AddressableManage.Editor
                 
                 EditorGUILayout.EndVertical();
                 
-                // 참조 추적 (가능한 경우)
+                // Reference tracking (is possible)
                 EditorGUILayout.Space(10);
                 GUILayout.Label("Reference Usage", _boldLabelStyle);
                 
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 EditorGUILayout.LabelField("Note: This feature is limited at runtime", EditorStyles.miniLabel);
                 
-                // 참조 추적
+                // Reference tracking
                 var usages = _data.FindReferences(_selectedEntry);
                 if (usages.Count == 0)
                 {

@@ -1,13 +1,14 @@
 
+#if ARM_UNITASK
 using System;
-using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using Cysharp.Threading.Tasks;
 
 namespace AddressableManage
 {
-    public class ARM
+    public sealed partial class ARM
     {
         #region Static Interface
         
@@ -73,6 +74,7 @@ namespace AddressableManage
             catch (Exception exception)
             {
                 Verbose.Ex("ARM.Activate activate error", exception);
+                Callbacks.RaiseOnActivateFailed();
             }
         }
 
@@ -98,6 +100,7 @@ namespace AddressableManage
             catch (Exception exception)
             {
                 Verbose.Ex("ARM.ActivateAsync activate error", exception);
+                Callbacks.RaiseOnActivateFailed();
                 return null;
             }
         }
@@ -107,6 +110,7 @@ namespace AddressableManage
             if (operationHandle.Status != AsyncOperationStatus.Succeeded)
             {
                 Verbose.E("Failed to initialize Addressable System.");
+                Callbacks.RaiseOnActivateFailed();
                 return;
             }
 
@@ -116,8 +120,15 @@ namespace AddressableManage
             }
             
             Initialized = true;
+            Callbacks.RaiseOnActivateCompleted();
         }
         
         #endregion
+        
+        internal static IAssetRegistry GetInternalRegistry()
+        {
+            return Instance._registry;
+        }
     }
 }
+#endif

@@ -1,4 +1,5 @@
 
+#if ARM_UNITASK
 using System;
 using Cysharp.Threading.Tasks;
 
@@ -102,3 +103,4 @@ namespace AddressableManage
         }
     }
 }
+#endif

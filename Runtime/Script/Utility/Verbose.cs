@@ -26,7 +26,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Info)
             {
-                UnityEngine.Debug.Log($"<color=#3498db>[INFO]</color> {message}");
+                UnityEngine.Debug.Log($"<color=#3498db>[ARM]</color> {message}");
             }
         }
         
@@ -35,7 +35,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Info)
             {
-                UnityEngine.Debug.Log($"<color=#3498db>[INFO]</color> <color={hexColor}>{message}</color>");
+                UnityEngine.Debug.Log($"<color=#3498db>[ARM]</color> <color={hexColor}>{message}</color>");
             }
         }
         
@@ -44,7 +44,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Info)
             {
-                UnityEngine.Debug.LogFormat($"<color=#3498db>[INFO]</color> {format}", args);
+                UnityEngine.Debug.LogFormat($"<color=#3498db>[ARM]</color> {format}", args);
             }
         }
         
@@ -53,7 +53,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Warning)
             {
-                UnityEngine.Debug.LogWarning($"<color=#f39c12>[WARNING]</color> {message}");
+                UnityEngine.Debug.LogWarning($"<color=#f39c12>[ARM-W]</color> {message}");
             }
         }
         
@@ -62,7 +62,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Warning)
             {
-                UnityEngine.Debug.LogWarningFormat($"<color=#f39c12>[WARNING]</color> {format}", args);
+                UnityEngine.Debug.LogWarningFormat($"<color=#f39c12>[ARM-W]</color> {format}", args);
             }
         }
         
@@ -71,7 +71,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Error)
             {
-                UnityEngine.Debug.LogError($"<color=#e74c3c>[ERROR]</color> {message}");
+                UnityEngine.Debug.LogError($"<color=#e74c3c>[ARM-E]</color> {message}");
             }
         }
         
@@ -80,7 +80,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Error)
             {
-                UnityEngine.Debug.LogErrorFormat($"<color=#e74c3c>[ERROR]</color> {format}", args);
+                UnityEngine.Debug.LogErrorFormat($"<color=#e74c3c>[ARM-E]</color> {format}", args);
             }
         }
         
@@ -98,7 +98,7 @@ namespace AddressableManage
         {
             if (_currentLogLevel >= LogLevel.Exception)
             {
-                UnityEngine.Debug.LogError($"<color=#9b59b6>[EXCEPTION]</color> {message}\n{exception}");
+                UnityEngine.Debug.LogError($"<color=#9b59b6>[ARM-EX]</color> {message}\n{exception}");
             }
         }
 
@@ -107,7 +107,7 @@ namespace AddressableManage
         {
             if (condition && _currentLogLevel >= LogLevel.Info)
             {
-                UnityEngine.Debug.Log($"<color=#3498db>[CONDITIONAL]</color> {message}");
+                UnityEngine.Debug.Log($"<color=#3498db>[ARM-Conditional]</color> {message}");
             }
         }
     }

@@ -1,4 +1,5 @@
 
+#if ARM_UNITASK
 using System;
 using System.Reflection;
 using UnityEditor;
@@ -100,3 +101,4 @@ namespace AddressableManage.Editor
         }
     }
 }
+#endif

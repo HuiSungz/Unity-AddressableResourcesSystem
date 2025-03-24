@@ -1,4 +1,5 @@
 
+#if ARM_UNITASK
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
@@ -58,3 +59,4 @@ namespace AddressableManage
         }
     }
 }
+#endif

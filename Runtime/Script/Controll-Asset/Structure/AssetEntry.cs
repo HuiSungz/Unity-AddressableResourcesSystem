@@ -1,4 +1,5 @@
 
+#if ARM_UNITASK
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -52,6 +53,12 @@ namespace AddressableManage
                 Verbose.W($"Batch loaded asset {Key} cannot be released.");
                 return;
             }
+            
+            if (ReferenceCount <= 0)
+            {
+                Verbose.W($"Attempting to release asset {Key} with reference count already at {ReferenceCount}");
+                return;
+            }
 
             if (--ReferenceCount > 0)
             {
@@ -65,3 +72,4 @@ namespace AddressableManage
         #endregion
     }
 }
+#endif

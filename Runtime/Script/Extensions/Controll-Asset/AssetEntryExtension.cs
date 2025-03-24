@@ -1,3 +1,5 @@
+
+#if ARM_UNITASK
 using UnityEngine;
 
 namespace AddressableManage
@@ -292,3 +294,4 @@ namespace AddressableManage
         #endregion
     }
 }
+#endif

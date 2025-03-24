@@ -1,4 +1,5 @@
 
+#if ARM_UNITASK
 using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -85,3 +86,4 @@ namespace AddressableManage
         UniTask<bool> UnloadAllScenes();
     }
 }
+#endif

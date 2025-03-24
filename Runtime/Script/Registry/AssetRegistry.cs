@@ -1,4 +1,5 @@
 
+#if ARM_UNITASK
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceLocations;
@@ -55,3 +56,4 @@ namespace AddressableManage
         }
     }
 }
+#endif

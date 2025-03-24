@@ -1,4 +1,5 @@
 
+#if ARM_UNITASK
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +35,12 @@ namespace AddressableManage
             if (!ARM.Initialized)
             {
                 Verbose.W("Not initialized. you should call ARM.Initialize() first.");
+                return new ARMOperationHandle<bool>();
+            }
+            
+            if(labelReferences == null || labelReferences.Count == 0)
+            {
+                Verbose.W("No label references to load.");
                 return new ARMOperationHandle<bool>();
             }
             
@@ -75,6 +82,12 @@ namespace AddressableManage
                 Verbose.W("Not initialized. you should call ARM.Initialize() first.");
                 return new ARMOperationHandle<AssetEntry>();
             }
+
+            if (string.IsNullOrEmpty(key))
+            {
+                Verbose.W("Key is null or empty.");
+                return new ARMOperationHandle<AssetEntry>();
+            }
             
             var armOperationHandle = new ARMOperationHandle<AssetEntry>();
             
@@ -88,6 +101,12 @@ namespace AddressableManage
             if (!ARM.Initialized)
             {
                 Verbose.W("Not initialized. you should call ARM.Initialize() first.");
+                return new ARMOperationHandle<AssetEntry>();
+            }
+            
+            if (assetReference == null)
+            {
+                Verbose.W("Asset reference is null.");
                 return new ARMOperationHandle<AssetEntry>();
             }
             
@@ -124,7 +143,7 @@ namespace AddressableManage
             }
             catch (Exception exception)
             {
-                Verbose.Ex("TryGetLoadedEntryByLocationKey 오류", exception);
+                Verbose.Ex("TryGetLoadedEntryByLocationKey Exception, ", exception);
                 return false;
             }
         }
@@ -155,7 +174,7 @@ namespace AddressableManage
             }
             catch (Exception exception)
             {
-                Verbose.Ex("TryGetLoadedEntryByLocationKey 오류", exception);
+                Verbose.Ex("TryGetLoadedEntryByLocationKey Exception, ", exception);
                 return false;
             }
         }
@@ -232,3 +251,4 @@ namespace AddressableManage
         #endregion
     }
 }
+#endif
