@@ -10,17 +10,14 @@ namespace AddressableManage.Editor
     [InitializeOnLoad]
     public class ARMDependencySetupProcessor
     {
+#if !ARM_UNITASK
         // 설치 상태를 추적하는 정적 필드
         private static bool _isSettingUpUniTask = false;
         
         static ARMDependencySetupProcessor()
         {
             // 도메인 리로드 후 실행
-            EditorApplication.delayCall += () =>
-            {
-                SetupUniTaskDependency();
-                ShowWelcomeWindowIfNeeded();
-            };
+            EditorApplication.delayCall += SetupUniTaskDependency;
         }
         
         /// <summary>
@@ -33,9 +30,15 @@ namespace AddressableManage.Editor
                 
             var presenter = new ARMUniTaskDependencyPresenter();
             
-            // 이미 설치 완료되었는지 확인 (manifest 기준)
-            if (presenter.IsUniTaskProperlySetup())
+            // 모델 인스턴스 생성
+            var model = new ARMUniTaskDependencyModel();
+            
+            // 어셈블리가 이미 로드되어 있고 심볼도 추가되어 있는지 확인
+            if (model.IsUniTaskAssemblyLoaded() && model.IsArmUniTaskSymbolAdded())
+            {
+                Debug.Log("ARM: UniTask is already properly setup.");
                 return;
+            }
                 
             // 설치 진행 중임을 표시
             _isSettingUpUniTask = true;
@@ -51,17 +54,11 @@ namespace AddressableManage.Editor
                 }
                 else
                 {
-                    Debug.LogError("ARM: Failed to setup UniTask dependency. Please install UniTask manually from OpenUPM.");
+                    Debug.LogWarning("ARM: UniTask setup in progress but not yet complete.");
+                    Debug.LogWarning("ARM: The setup will continue next time Unity is started.");
                 }
             });
         }
-        
-        /// <summary>
-        /// Show welcome window if needed
-        /// </summary>
-        private static void ShowWelcomeWindowIfNeeded()
-        {
-            ARMWelcomeWindow.ShowWindowIfNeeded();
-        }
+#endif
     }
 }

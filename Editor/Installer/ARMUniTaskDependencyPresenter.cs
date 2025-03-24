@@ -9,6 +9,7 @@ namespace AddressableManage.Editor
     /// </summary>
     public class ARMUniTaskDependencyPresenter
     {
+#if !ARM_UNITASK
         private readonly ARMUniTaskDependencyModel _model;
         
         // Events
@@ -114,45 +115,94 @@ namespace AddressableManage.Editor
         }
         
         /// <summary>
-        /// UniTask를 설치하고 설치가 완료된 후에 심볼 추가 - 비동기 버전
+        /// UniTask를 설치하고 실제 어셈블리가 로드된 후에 심볼 추가 - 비동기 버전
         /// </summary>
         public void SetupUniTaskCompletelyAsync(Action<bool> onComplete)
         {
-            // 이미 설치되어 있는지 확인 (실제 패키지 확인)
+            // 이미 어셈블리가 로드되어 있는지 확인
+            if (_model.IsUniTaskAssemblyLoaded())
+            {
+                Debug.Log("ARM: UniTask assembly is already loaded.");
+                // 어셈블리가 로드되었으면 심볼 추가
+                if (!_model.IsArmUniTaskSymbolAdded())
+                {
+                    _model.AddArmUniTaskSymbol();
+                    OnUniTaskSymbolChanged?.Invoke(true);
+                }
+                onComplete?.Invoke(true);
+                return;
+            }
+            
+            // 패키지 설치 여부 확인
             _model.CheckUniTaskInstallationAsync((isInstalled) => {
                 if (isInstalled)
                 {
-                    // 이미 설치되어 있으면 심볼만 추가
-                    if (!_model.IsArmUniTaskSymbolAdded())
-                    {
-                        _model.AddArmUniTaskSymbol();
-                        OnUniTaskSymbolChanged?.Invoke(true);
-                    }
-                    onComplete?.Invoke(true);
+                    // 패키지는 설치되어 있지만 어셈블리가 로드되지 않은 경우
+                    Debug.Log("ARM: UniTask package is installed but assembly is not loaded yet.");
+                    
+                    // 패키지가 로드될 때까지 기다림
+                    WaitForUniTaskAssemblyLoaded();
                 }
                 else
                 {
-                    // 설치되어 있지 않으면 설치 진행
+                    // 패키지가 설치되어 있지 않으면 설치 진행
+                    Debug.Log("ARM: Installing UniTask package...");
                     _model.InstallUniTaskPackageAsync((installSuccess) => {
                         if (installSuccess)
                         {
-                            // 설치가 완료되면 심볼 추가
-                            if (!_model.IsArmUniTaskSymbolAdded())
-                            {
-                                _model.AddArmUniTaskSymbol();
-                                OnUniTaskSymbolChanged?.Invoke(true);
-                            }
-                            onComplete?.Invoke(true);
+                            Debug.Log("ARM: UniTask package installed successfully. Waiting for assembly to load...");
+                            // 패키지 설치 후 어셈블리 로드 대기
+                            WaitForUniTaskAssemblyLoaded();
                         }
                         else
                         {
                             // 설치 실패
-                            Debug.LogError("Failed to install UniTask package.");
+                            Debug.LogError("ARM: Failed to install UniTask package.");
                             onComplete?.Invoke(false);
                         }
                     });
                 }
             });
+            
+            // 어셈블리 로드 대기 함수
+            void WaitForUniTaskAssemblyLoaded()
+            {
+                _model.CheckUniTaskAssemblyLoadedAsync((loaded) => {
+                    if (loaded)
+                    {
+                        Debug.Log("ARM: UniTask assembly loaded successfully.");
+                        // 어셈블리가 로드되었으면 심볼 추가
+                        if (!_model.IsArmUniTaskSymbolAdded())
+                        {
+                            _model.AddArmUniTaskSymbol();
+                            OnUniTaskSymbolChanged?.Invoke(true);
+                        }
+                        onComplete?.Invoke(true);
+                    }
+                    else
+                    {
+                        Debug.LogError("ARM: UniTask assembly failed to load in reasonable time.");
+                        Debug.LogError("ARM: Please restart Unity to complete the setup.");
+                        onComplete?.Invoke(false);
+                    }
+                });
+            }
         }
+#else
+        public ARMUniTaskDependencyPresenter()
+        {
+            // ARM_UNITASK 심볼이 이미 정의되어 있으면 아무것도 하지 않음
+            Debug.Log("ARM: UniTask is already installed and configured.");
+        }
+        
+        // ARM_UNITASK 심볼이 정의된 경우 더미 메서드들
+        public bool IsUniTaskProperlySetup() => true;
+        public bool IsUniTaskInstalled() => true;
+        public bool IsArmUniTaskSymbolAdded() => true;
+        public bool InstallUniTask() => true;
+        public void AddArmUniTaskSymbol() { }
+        public bool SetupUniTaskCompletely() => true;
+        public void SetupUniTaskCompletelyAsync(Action<bool> onComplete) => onComplete?.Invoke(true);
+#endif
     }
 }

@@ -12,6 +12,7 @@ namespace AddressableManage.Editor
     /// <summary>
     /// Model class for handling UniTask dependency and define symbols
     /// </summary>
+#if !ARM_UNITASK
     public class ARMUniTaskDependencyModel
     {
         private const string ARM_UNITASK_SYMBOL = "ARM_UNITASK";
@@ -274,6 +275,81 @@ namespace AddressableManage.Editor
         }
 
         /// <summary>
+        /// UniTask 패키지가 실제로 로드되었는지 확인 (어셈블리 기반 확인)
+        /// </summary>
+        public bool IsUniTaskAssemblyLoaded()
+        {
+            try
+            {
+                // 실제 UniTask 어셈블리의 존재 여부 확인
+                var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
+                foreach (var assembly in assemblies)
+                {
+                    if (assembly.GetName().Name == "UniTask" || 
+                        assembly.GetName().Name == "UniTask.Addressables")
+                    {
+                        // 어셈블리 내의 대표적인 타입도 확인
+                        Type type = assembly.GetType("Cysharp.Threading.Tasks.UniTask");
+                        if (type != null)
+                        {
+                            // 타입이 존재하면 패키지가 제대로 로드됨
+                            return true;
+                        }
+                    }
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"Error checking UniTask assembly: {ex.Message}");
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// UniTask 패키지 실제 로드 여부 비동기 확인
+        /// </summary>
+        public void CheckUniTaskAssemblyLoadedAsync(Action<bool> onComplete, int maxRetries = 30)
+        {
+            int retryCount = 0;
+            bool isChecking = true;
+            
+            // 1초마다 체크
+            EditorApplication.update += Check;
+            
+            void Check()
+            {
+                if (!isChecking)
+                    return;
+                    
+                if (EditorApplication.timeSinceStartup % 1 < 0.02)
+                {
+                    if (IsUniTaskAssemblyLoaded())
+                    {
+                        // 어셈블리 로드 확인됨
+                        StopChecking(true);
+                        return;
+                    }
+                    
+                    retryCount++;
+                    if (retryCount >= maxRetries)
+                    {
+                        // 최대 시도 횟수 초과
+                        Debug.LogWarning($"UniTask assembly load check timed out after {maxRetries} attempts.");
+                        StopChecking(false);
+                    }
+                }
+            }
+            
+            void StopChecking(bool success)
+            {
+                isChecking = false;
+                EditorApplication.update -= Check;
+                onComplete?.Invoke(success);
+            }
+        }
+
+        /// <summary>
         /// Check if ARM_UNITASK define symbol is added
         /// </summary>
         public bool IsArmUniTaskSymbolAdded()
@@ -392,4 +468,5 @@ namespace AddressableManage.Editor
             return symbolString + ";" + symbol;
         }
     }
+#endif
 }
