@@ -8,7 +8,7 @@ namespace AddressableManage.Editor
     [Serializable]
     public class ARMTrackerSettings
     {
-        // 정렬 옵션
+        // Sorting Options
         public static readonly string[] SortOptions = new[]
         {
             "Key",
@@ -19,7 +19,7 @@ namespace AddressableManage.Editor
             "Handle Count"
         };
         
-        // 설정 키
+        // Settings Key
         private const string PREF_PREFIX = "ARMTracker_";
         private const string PREF_REFRESH_INTERVAL = PREF_PREFIX + "RefreshInterval";
         private const string PREF_SORT_INDEX = PREF_PREFIX + "SortIndex";
@@ -30,20 +30,20 @@ namespace AddressableManage.Editor
         private const string PREF_WINDOW_WIDTH = PREF_PREFIX + "WindowWidth";
         private const string PREF_WINDOW_HEIGHT = PREF_PREFIX + "WindowHeight";
         
-        // 기본값
+        // Default
         private const float DEFAULT_REFRESH_INTERVAL = 1.0f;
         private const int DEFAULT_SORT_INDEX = 0;
         private const bool DEFAULT_SHOW_BATCH = true;
         private const bool DEFAULT_SHOW_INDIVIDUAL = true;
         
-        // 설정 값
+        // Settings Value
         public float RefreshInterval { get; set; } = DEFAULT_REFRESH_INTERVAL;
         public int SortIndex { get; set; } = DEFAULT_SORT_INDEX;
         public bool ShowBatchLoaded { get; set; } = DEFAULT_SHOW_BATCH;
         public bool ShowIndividualLoaded { get; set; } = DEFAULT_SHOW_INDIVIDUAL;
         public Rect WindowRect { get; set; } = new Rect(100, 100, 800, 600);
         
-        // 설정 로드
+        // Setting Load
         public static ARMTrackerSettings LoadSettings()
         {
             ARMTrackerSettings settings = new ARMTrackerSettings
@@ -63,7 +63,7 @@ namespace AddressableManage.Editor
             return settings;
         }
         
-        // 설정 저장
+        // Setting Save
         public void SaveSettings()
         {
             EditorPrefs.SetFloat(PREF_REFRESH_INTERVAL, RefreshInterval);
@@ -76,7 +76,7 @@ namespace AddressableManage.Editor
             EditorPrefs.SetFloat(PREF_WINDOW_HEIGHT, WindowRect.height);
         }
         
-        // 설정 리셋
+        // Setting Reset
         public void ResetToDefaults()
         {
             RefreshInterval = DEFAULT_REFRESH_INTERVAL;
