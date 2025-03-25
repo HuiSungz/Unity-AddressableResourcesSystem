@@ -73,6 +73,8 @@ https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
 > If you find a bug or have a feature request, please open an issue on GitHub.<br>
 > For general questions or if you need help, please contact via email.
 
+[![](https://github.com/user-attachments/assets/d7dfc32d-bb84-452c-a7ee-c0b5ba3b487a)](https://github.com/users/huisungz/sponsorship)
+
 ## License
 
 This library is under the MIT License.
