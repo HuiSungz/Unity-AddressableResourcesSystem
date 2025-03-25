@@ -10,21 +10,22 @@ namespace AddressableManage.Editor
 {
     public class ARMTrackerWindow : EditorWindow
     {
-        // 싱글톤 인스턴스
+        // Singleton instance
         private static ARMTrackerWindow _instance;
         
-        // 설정 및 데이터 관리자
+        // Settings and data manager
         private ARMTrackerSettings _settings;
         private ARMTrackerReflectionData _data;
         
-        // UI 상태 변수
+        // UI state variables
         private Vector2 _assetListScrollPosition;
         private Vector2 _detailScrollPosition;
         private float _splitViewPosition = 500f;
         private AssetEntryProxy _selectedEntry;
         private string _searchText = "";
+        private bool _initialized = false;
         
-        // UI 설정
+        // UI settings
         private readonly Color _evenRowColor = new Color(0.8f, 0.8f, 0.8f, 0.1f);
         private readonly Color _oddRowColor = new Color(0.8f, 0.8f, 0.8f, 0.2f);
         private readonly Color _selectedRowColor = new Color(0.3f, 0.7f, 0.9f, 0.4f);
@@ -35,7 +36,7 @@ namespace AddressableManage.Editor
         private GUIStyle _assetRowStyle;
         private GUIStyle _centeredLabelStyle;
         
-        // 리프레시 타이머
+        // Refresh timer
         private double _lastRefreshTime;
         
         [MenuItem("ARM/Reference Tracker")]
@@ -47,11 +48,7 @@ namespace AddressableManage.Editor
         
         private void OnEnable()
         {
-            _settings = ARMTrackerSettings.LoadSettings();
-            _data = new ARMTrackerReflectionData();
-            
-            // 스타일 초기화는 OnGUI에서 수행
-            
+            InitializeIfNeeded();
             EditorApplication.playModeStateChanged += OnPlayModeChanged;
             EditorApplication.update += OnEditorUpdate;
         }
@@ -60,29 +57,76 @@ namespace AddressableManage.Editor
         {
             EditorApplication.playModeStateChanged -= OnPlayModeChanged;
             EditorApplication.update -= OnEditorUpdate;
+            CleanupData();
+        }
+        
+        private void InitializeIfNeeded()
+        {
+            if (!_initialized)
+            {
+                _settings = ARMTrackerSettings.LoadSettings();
+                _data = new ARMTrackerReflectionData();
+                _initialized = true;
+            }
+        }
+
+        private void CleanupData()
+        {
+            if (_data != null)
+            {
+                _data.Reset();
+                _data = null;
+            }
+            _selectedEntry = null;
+            _initialized = false;
         }
         
         private void OnPlayModeChanged(PlayModeStateChange state)
         {
-            if (state == PlayModeStateChange.EnteredPlayMode)
+            switch (state)
             {
-                // 플레이 모드 진입 시 데이터 리셋
-                _data.Reset();
+                case PlayModeStateChange.EnteredPlayMode:
+                    InitializeIfNeeded();
+                    if (_data != null)
+                    {
+                        _data.Reset();
+                        _data.InitializeReflectionInfo(); // Reinitialize reflection data
+                    }
+                    break;
+
+                case PlayModeStateChange.ExitingPlayMode:
+                    if (_data != null)
+                    {
+                        _data.Reset();
+                    }
+                    _selectedEntry = null;
+                    break;
+
+                case PlayModeStateChange.EnteredEditMode:
+                    CleanupData();
+                    Repaint();
+                    break;
             }
         }
         
         private void OnEditorUpdate()
         {
-            if (!EditorApplication.isPlaying)
+            if (!EditorApplication.isPlaying || _data == null)
                 return;
                 
-            // 설정된 간격으로 데이터 업데이트
             double currentTime = EditorApplication.timeSinceStartup;
             if (currentTime - _lastRefreshTime >= _settings.RefreshInterval)
             {
                 _lastRefreshTime = currentTime;
-                _data.Refresh();
-                Repaint();
+                try
+                {
+                    _data.Refresh();
+                    Repaint();
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"[ARM Tracker] Error during refresh: {ex.Message}");
+                }
             }
         }
         
@@ -122,9 +166,10 @@ namespace AddressableManage.Editor
         
         private void OnGUI()
         {
+            InitializeIfNeeded();
             InitializeStyles();
             
-            // 플레이 모드가 아닐 때 상단에 알림 배너 표시
+            // Display notification banner when not in play mode
             if (!EditorApplication.isPlaying)
             {
                 EditorGUILayout.BeginHorizontal(EditorStyles.helpBox);
@@ -135,24 +180,62 @@ namespace AddressableManage.Editor
                     EditorApplication.isPlaying = true;
                 }
                 EditorGUILayout.EndHorizontal();
+                return; // Don't draw the rest of the UI when not in play mode
+            }
+
+            if (_data == null)
+            {
+                EditorGUILayout.HelpBox("Tracker data is not initialized. Try re-entering play mode.", MessageType.Warning);
+                return;
             }
             
-            DrawToolbar();
+            try
+            {
+                DrawToolbar();
+                
+                EditorGUILayout.BeginHorizontal();
+                DrawAssetList();
+                _splitViewPosition = ResizeSplitView(_splitViewPosition, 300, position.width - 300);
+                DrawDetailPanel();
+                EditorGUILayout.EndHorizontal();
+                
+                DrawStatusBar();
+            }
+            catch (Exception ex)
+            {
+                EditorGUILayout.HelpBox($"Error drawing UI: {ex.Message}", MessageType.Error);
+                Debug.LogError($"[ARM Tracker] GUI Error: {ex}");
+            }
+        }
+
+        private void DrawHandleRow(IResourceLocation location, AsyncOperationHandle handle, int index)
+        {
+            if (!handle.IsValid())
+            {
+                return; // Skip invalid handles
+            }
+
+            Color backgroundColor = index % 2 == 0 ? _evenRowColor : _oddRowColor;
+            Color oldColor = GUI.backgroundColor;
+            GUI.backgroundColor = backgroundColor;
             
-            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.BeginHorizontal(_assetRowStyle);
             
-            // 왼쪽 패널 - 에셋 리스트
-            DrawAssetList();
-            
-            // 리사이즈 핸들
-            _splitViewPosition = ResizeSplitView(_splitViewPosition, 300, position.width - 300);
-            
-            // 오른쪽 패널 - 선택된 에셋 상세 정보
-            DrawDetailPanel();
+            try
+            {
+                GUILayout.Label(location.PrimaryKey, GUILayout.Width(250));
+                GUILayout.Label(handle.Status.ToString(), GUILayout.Width(100));
+                GUILayout.Label(location.ResourceType?.Name ?? "Unknown", GUILayout.Width(150));
+                GUILayout.Label($"{handle.PercentComplete * 100:F1}%", GUILayout.Width(100));
+            }
+            catch (Exception)
+            {
+                GUILayout.Label("Invalid Handle", GUILayout.Width(250));
+            }
             
             EditorGUILayout.EndHorizontal();
             
-            DrawStatusBar();
+            GUI.backgroundColor = oldColor;
         }
         
         private void DrawToolbar()
@@ -166,7 +249,7 @@ namespace AddressableManage.Editor
             
             EditorGUILayout.Space();
             
-            // 검색 필드
+            // Search field
             EditorGUILayout.BeginHorizontal();
             _searchText = EditorGUILayout.TextField(_searchText, EditorStyles.toolbarSearchField, GUILayout.Width(200));
             if (GUILayout.Button("X", EditorStyles.toolbarButton, GUILayout.Width(18)))
@@ -182,7 +265,7 @@ namespace AddressableManage.Editor
             
             EditorGUILayout.Space();
             
-            // 정렬 옵션
+            // Sorting options
             EditorGUILayout.LabelField("Sort by:", GUILayout.Width(50));
             int newSortIndex = EditorGUILayout.Popup(_settings.SortIndex, ARMTrackerSettings.SortOptions, EditorStyles.toolbarPopup, GUILayout.Width(100));
             if (newSortIndex != _settings.SortIndex)
@@ -194,7 +277,7 @@ namespace AddressableManage.Editor
             
             EditorGUILayout.Space();
             
-            // 표시 필터
+            // Visibility filters
             EditorGUILayout.LabelField("Show:", GUILayout.Width(40));
             
             bool newShowBatch = GUILayout.Toggle(_settings.ShowBatchLoaded, "Batch", EditorStyles.toolbarButton, GUILayout.Width(50));
@@ -210,7 +293,7 @@ namespace AddressableManage.Editor
             
             EditorGUILayout.Space(20);
             
-            // 업데이트 간격 설정
+            // Refresh rate settings
             EditorGUILayout.LabelField("Refresh Rate:", GUILayout.Width(80));
             float newInterval = EditorGUILayout.Slider(_settings.RefreshInterval, 0.1f, 5.0f, GUILayout.Width(150));
             if (Math.Abs(newInterval - _settings.RefreshInterval) > 0.01f)
@@ -226,7 +309,7 @@ namespace AddressableManage.Editor
         {
             EditorGUILayout.BeginVertical(GUILayout.Width(_splitViewPosition));
             
-            // 헤더
+            // Header
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
             GUILayout.Label("Asset Key", _headerStyle, GUILayout.Width(_splitViewPosition * 0.5f));
             GUILayout.Label("Ref Count", _headerStyle, GUILayout.Width(_splitViewPosition * 0.15f));
@@ -234,10 +317,10 @@ namespace AddressableManage.Editor
             GUILayout.Label("Handles", _headerStyle, GUILayout.Width(_splitViewPosition * 0.2f));
             EditorGUILayout.EndHorizontal();
             
-            // 리스트 영역
+            // List area
             _assetListScrollPosition = EditorGUILayout.BeginScrollView(_assetListScrollPosition);
             
-            // 데이터 리스트 그리기
+            // Draw data list
             List<AssetEntryProxy> entries = _data.GetVisibleEntries();
             if (entries.Count == 0)
             {
@@ -266,30 +349,30 @@ namespace AddressableManage.Editor
         {
             bool isSelected = _selectedEntry == entry;
             
-            // 행 배경색 설정
+            // Set row background color
             Color backgroundColor = isSelected ? _selectedRowColor : (index % 2 == 0 ? _evenRowColor : _oddRowColor);
             Color oldColor = GUI.backgroundColor;
             GUI.backgroundColor = backgroundColor;
             
             EditorGUILayout.BeginHorizontal(_assetRowStyle);
             
-            // 배치/개별 로드 표시 색상 마커
+            // Batch/Individual load color marker
             Rect colorRect = GUILayoutUtility.GetRect(4, 20, GUILayout.Width(4));
             EditorGUI.DrawRect(colorRect, entry.IsBatchLoaded ? _batchLoadedColor : _individualLoadedColor);
             
-            // 키 이름
+            // Key name
             if (GUILayout.Button(entry.Key, EditorStyles.label, GUILayout.Width(_splitViewPosition * 0.5f - 4)))
             {
                 _selectedEntry = entry;
             }
             
-            // 참조 카운트
+            // Reference Count
             GUILayout.Label(entry.ReferenceCount.ToString(), GUILayout.Width(_splitViewPosition * 0.15f));
             
-            // 배치 로드 여부
+            // Batch load status
             GUILayout.Label(entry.IsBatchLoaded ? "Yes" : "No", GUILayout.Width(_splitViewPosition * 0.15f));
             
-            // 핸들 개수
+            // Handle Count
             GUILayout.Label(entry.HandleMap.Count.ToString(), GUILayout.Width(_splitViewPosition * 0.2f));
             
             EditorGUILayout.EndHorizontal();
@@ -301,7 +384,7 @@ namespace AddressableManage.Editor
         {
             EditorGUILayout.BeginVertical();
             
-            // 헤더
+            // Header
             EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
             GUILayout.Label("Detail View", _headerStyle);
             EditorGUILayout.EndHorizontal();
@@ -316,7 +399,7 @@ namespace AddressableManage.Editor
             {
                 EditorGUILayout.Space(10);
                 
-                // 에셋 정보 헤더
+                // Asset Information header
                 GUILayout.Label("Asset Information", _boldLabelStyle);
                 
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
@@ -328,12 +411,12 @@ namespace AddressableManage.Editor
                 
                 EditorGUILayout.Space(10);
                 
-                // 핸들 목록
+                // Handle Map
                 GUILayout.Label("Handle Map", _boldLabelStyle);
                 
                 EditorGUILayout.BeginVertical(EditorStyles.helpBox);
                 
-                // handle table header
+                // Handle table header
                 EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
                 GUILayout.Label("Resource Location", _headerStyle, GUILayout.Width(250));
                 GUILayout.Label("Status", _headerStyle, GUILayout.Width(100));
@@ -341,7 +424,7 @@ namespace AddressableManage.Editor
                 GUILayout.Label("Percent Complete", _headerStyle, GUILayout.Width(100));
                 EditorGUILayout.EndHorizontal();
                 
-                // handle row
+                // Handle row
                 int index = 0;
                 foreach (var handlePair in _selectedEntry.HandleMap)
                 {
@@ -350,7 +433,7 @@ namespace AddressableManage.Editor
                 
                 EditorGUILayout.EndVertical();
                 
-                // Reference tracking (is possible)
+                // Reference tracking (if available)
                 EditorGUILayout.Space(10);
                 GUILayout.Label("Reference Usage", _boldLabelStyle);
                 
@@ -376,24 +459,6 @@ namespace AddressableManage.Editor
             
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
-        }
-        
-        private void DrawHandleRow(IResourceLocation location, AsyncOperationHandle handle, int index)
-        {
-            Color backgroundColor = index % 2 == 0 ? _evenRowColor : _oddRowColor;
-            Color oldColor = GUI.backgroundColor;
-            GUI.backgroundColor = backgroundColor;
-            
-            EditorGUILayout.BeginHorizontal(_assetRowStyle);
-            
-            GUILayout.Label(location.PrimaryKey, GUILayout.Width(250));
-            GUILayout.Label(handle.Status.ToString(), GUILayout.Width(100));
-            GUILayout.Label(location.ResourceType?.Name ?? "Unknown", GUILayout.Width(150));
-            GUILayout.Label($"{handle.PercentComplete * 100:F1}%", GUILayout.Width(100));
-            
-            EditorGUILayout.EndHorizontal();
-            
-            GUI.backgroundColor = oldColor;
         }
         
         private void DrawStatusBar()
@@ -442,7 +507,7 @@ namespace AddressableManage.Editor
                 _resizing = false;
             }
             
-            // 리사이즈 핸들 시각화
+            // Visualize resize handle
             Color oldColor = GUI.color;
             GUI.color = Color.grey;
             GUI.DrawTexture(resizeRect, EditorGUIUtility.whiteTexture);
