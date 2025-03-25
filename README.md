@@ -1,7 +1,7 @@
 # <img alt="ARM-Icon" src="https://imgur.com/zdGDYCN.png" width="26"/> Addressable Resources Management
 
 ![GitHub Release](https://img.shields.io/github/v/release/HuiSungz/Unity-AddressableResourcesSystem?display_name=release&style=for-the-badge&logo=github)
-![Static Badge](https://img.shields.io/badge/UNITY-2022.3%2B-blue?style=for-the-badge&logo=unity)
+![Static Badge](https://img.shields.io/badge/UNITY-6000.0%2B-blue?style=for-the-badge&logo=unity)
 ![Static Badge](https://img.shields.io/badge/DEPENDENCIES-UniTask--Addressables-green?style=for-the-badge&logo=unity)
 
 [![Static Badge](https://img.shields.io/badge/ARM-Wiki-orange?style=for-the-badge&logo=gitbook)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
@@ -23,9 +23,10 @@ It also simplifies resource loading, caching, and memory management to provide p
 ## 📌 Table of contents
 
 - [Install via Git](#install-via-git)
+  - [Install via OpenUPM](#install-via-openupm)
   - [Dependencies](#dependencies)
 - [📝 Documentation](#-documentation)
-- - [Key Features](#key-features)
+  - [Key Features](#key-features)
 - [Contact](#contact)
 - [License](#license)
 
@@ -39,6 +40,15 @@ It also simplifies resource loading, caching, and memory management to provide p
  
 ```
 https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
+```
+
+### Install via OpenUPM
+- This package is available on [OpenUPM](https://openupm.com) package registry.
+- This is the preferred method of installation, as you can easily receive updates as they're released.
+- If you have [OpenUPM-CLI](https://github.com/openupm/openupm-cli) installed, then run the command
+
+```
+openupm add com.hs-architect.addressable-resources-system
 ```
 
 ### Dependencies
