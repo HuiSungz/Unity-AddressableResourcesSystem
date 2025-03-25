@@ -26,7 +26,7 @@ It also simplifies resource loading, caching, and memory management to provide p
   - [Install via OpenUPM](#install-via-openupm)
   - [Dependencies](#dependencies)
 - [📝 Documentation](#-documentation)
-  - [Key Features](#key-features)
+- [Key Features](#key-features)
 - [Contact](#contact)
 - [License](#license)
 
