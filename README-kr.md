@@ -1,7 +1,7 @@
 # <img alt="ARM-Icon" src="https://imgur.com/zdGDYCN.png" width="26"/> Addressable Resources Management
 
 ![GitHub Release](https://img.shields.io/github/v/release/HuiSungz/Unity-AddressableResourcesSystem?display_name=release&style=for-the-badge&logo=github)
-![Static Badge](https://img.shields.io/badge/UNITY-2022.3%2B-blue?style=for-the-badge&logo=unity)
+![Static Badge](https://img.shields.io/badge/UNITY-6000.0%2B-blue?style=for-the-badge&logo=unity)
 ![Static Badge](https://img.shields.io/badge/DEPENDENCIES-UniTask--Addressables-green?style=for-the-badge&logo=unity)
 
 [![Static Badge](https://img.shields.io/badge/ARM-Wiki-orange?style=for-the-badge&logo=gitbook)](https://github.com/HuiSungz/Unity-AddressableResourcesSystem/wiki)
@@ -22,14 +22,15 @@ ARM(Addressable Resources Management)은 Unity의 Addressables 패키지 확장 
 
 ## 📌 목차
 
-- [설치 방법](#설치-방법)
+- [설치 방법 Git](#설치-방법-git)
+  - [설치 방법 OpenUPM](#설치-방법-openupm)
   - [의존성](#의존성)
 - [📝 문서](#-문서)
 - [주요 기능](#주요-기능)
 - [컨택트](#컨택트)
 - [라이센스](#라이센스)
 
-## 설치 방법
+## 설치 방법 Git
 
 - Unity 2019.3 이상 버전부터는 `Package Manager`를 통한 Git URL로 설치가 가능합니다.
 
@@ -39,6 +40,15 @@ ARM(Addressable Resources Management)은 Unity의 Addressables 패키지 확장 
  
 ```
 https://https://github.com/HuiSungz/Unity-AddressableResourcesSystem.git
+```
+
+### 설치 방법 OpenUPM
+- 이 패키지는 [OpenUPM](https://openupm.com) 패키지 레지스트리에서도 추가할 수 있습니다.
+- 업데이트가 출시될 때마다 쉽게 받을 수 있어 이 방법이 권장되는 설치 방법입니다.
+- [OpenUPM-CLI](https://github.com/openupm/openupm-cli)가 설치되어 있다면, 다음 명령어를 실행하세요.
+
+```
+openupm add com.hs-architect.addressable-resources-system
 ```
 
 ### 의존성
