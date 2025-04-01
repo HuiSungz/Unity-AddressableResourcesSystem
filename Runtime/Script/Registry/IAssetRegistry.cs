@@ -5,7 +5,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal interface IAssetRegistry
     {

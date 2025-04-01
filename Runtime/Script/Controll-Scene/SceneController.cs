@@ -7,7 +7,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.SceneManagement;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal partial class SceneController : ISceneController
     {

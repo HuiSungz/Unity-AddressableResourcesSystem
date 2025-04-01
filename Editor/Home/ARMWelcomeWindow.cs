@@ -2,13 +2,15 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     /// <summary>
     /// Welcome window for ARM system
     /// </summary>
     public class ARMWelcomeWindow : EditorWindow
     {
+        #region Fields
+
         private ARMWelcomeWindowPresenter _presenter;
         
         private Texture2D _titleImage;
@@ -22,16 +24,19 @@ namespace AddressableManage.Editor
         private GUIStyle _featureBoxStyle;
         
         private bool _dontShowAgain;
-        
         private Vector2 _scrollPosition;
-        
-        [MenuItem("ARM/Welcome Message", priority = 0)]
+
+        #endregion
+
+        #region Show and Initialize
+
+        [MenuItem("ArchitectHS/ARM/Welcome Message", priority = 0)]
         public static void ShowWindow()
         {
-            ARMWelcomeWindow window = GetWindow<ARMWelcomeWindow>("Welcome to ARM");
+            var window = GetWindow<ARMWelcomeWindow>("Welcome to ARM");
             window.minSize = new Vector2(750, 650);
             window.maxSize = new Vector2(750, 650);
-            window.ShowUtility(); // 팝업 스타일로 표시
+            window.ShowUtility();
         }
         
         /// <summary>
@@ -64,90 +69,68 @@ namespace AddressableManage.Editor
         
         private void InitializeStyles()
         {
-            if (_headerStyle == null)
+            _headerStyle ??= new GUIStyle(EditorStyles.boldLabel)
             {
-                _headerStyle = new GUIStyle(EditorStyles.boldLabel)
-                {
-                    fontSize = 22,
-                    alignment = TextAnchor.MiddleCenter,
-                    margin = new RectOffset(10, 10, 10, 10),
-                    normal = { textColor = new Color(0.2f, 0.6f, 1.0f) }
-                };
-            }
+                fontSize = 22,
+                alignment = TextAnchor.MiddleCenter,
+                margin = new RectOffset(10, 10, 10, 10),
+                normal = { textColor = new Color(0.2f, 0.6f, 1.0f) }
+            };
             
-            if (_titleStyle == null)
+            _titleStyle ??= new GUIStyle(EditorStyles.boldLabel)
             {
-                _titleStyle = new GUIStyle(EditorStyles.boldLabel)
-                {
-                    fontSize = 16,
-                    alignment = TextAnchor.MiddleLeft,
-                    margin = new RectOffset(5, 5, 10, 5),
-                    normal = { textColor = new Color(0.8f, 0.8f, 0f) }
-                };
-            }
+                fontSize = 16,
+                alignment = TextAnchor.MiddleLeft,
+                margin = new RectOffset(5, 5, 10, 5),
+                normal = { textColor = new Color(0.8f, 0.8f, 0f) }
+            };
             
-            if (_descriptionStyle == null)
+            _descriptionStyle ??= new GUIStyle(EditorStyles.label)
             {
-                _descriptionStyle = new GUIStyle(EditorStyles.label)
-                {
-                    wordWrap = true,
-                    fontSize = 12,
-                    alignment = TextAnchor.UpperLeft,
-                    margin = new RectOffset(10, 10, 5, 10),
-                    normal = { textColor = new Color(0.8f, 0.8f, 0.8f) }
-                };
-            }
+                wordWrap = true,
+                fontSize = 12,
+                alignment = TextAnchor.UpperLeft,
+                margin = new RectOffset(10, 10, 5, 10),
+                normal = { textColor = new Color(0.8f, 0.8f, 0.8f) }
+            };
             
-            if (_featureStyle == null)
+            _featureStyle ??= new GUIStyle(EditorStyles.label)
             {
-                _featureStyle = new GUIStyle(EditorStyles.label)
-                {
-                    wordWrap = true,
-                    fontSize = 12,
-                    alignment = TextAnchor.MiddleLeft,
-                    margin = new RectOffset(10, 10, 2, 2),
-                    richText = true
-                };
-            }
+                wordWrap = true,
+                fontSize = 12,
+                alignment = TextAnchor.MiddleLeft,
+                margin = new RectOffset(10, 10, 2, 2),
+                richText = true
+            };
             
-            if (_buttonStyle == null)
+            _buttonStyle ??= new GUIStyle(GUI.skin.button)
             {
-                _buttonStyle = new GUIStyle(GUI.skin.button)
-                {
-                    fontSize = 13,
-                    fontStyle = FontStyle.Bold,
-                    fixedHeight = 35,
-                    margin = new RectOffset(5, 5, 5, 5)
-                };
-            }
+                fontSize = 13,
+                fontStyle = FontStyle.Bold,
+                fixedHeight = 35,
+                margin = new RectOffset(5, 5, 5, 5)
+            };
             
-            if (_toggleStyle == null)
+            _toggleStyle ??= new GUIStyle(EditorStyles.toggle)
             {
-                _toggleStyle = new GUIStyle(EditorStyles.toggle)
-                {
-                    fontSize = 11,
-                    margin = new RectOffset(5, 5, 5, 5)
-                };
-            }
+                fontSize = 11,
+                margin = new RectOffset(5, 5, 5, 5)
+            };
             
-            if (_boxStyle == null)
+            _boxStyle ??= new GUIStyle(EditorStyles.helpBox)
             {
-                _boxStyle = new GUIStyle(EditorStyles.helpBox)
-                {
-                    padding = new RectOffset(15, 15, 15, 15),
-                    margin = new RectOffset(10, 10, 10, 10)
-                };
-            }
+                padding = new RectOffset(15, 15, 15, 15),
+                margin = new RectOffset(10, 10, 10, 10)
+            };
             
-            if (_featureBoxStyle == null)
+            _featureBoxStyle ??= new GUIStyle(EditorStyles.helpBox)
             {
-                _featureBoxStyle = new GUIStyle(EditorStyles.helpBox)
-                {
-                    padding = new RectOffset(10, 10, 10, 10),
-                    margin = new RectOffset(10, 10, 5, 5)
-                };
-            }
+                padding = new RectOffset(10, 10, 10, 10),
+                margin = new RectOffset(10, 10, 5, 5)
+            };
         }
+
+        #endregion
         
         private void OnGUI()
         {

@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     public interface IAssetController
     {

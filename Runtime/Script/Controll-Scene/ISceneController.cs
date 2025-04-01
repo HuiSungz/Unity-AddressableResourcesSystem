@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     /// <summary>
     /// Interface for scene loading and management operations

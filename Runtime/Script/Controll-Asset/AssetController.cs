@@ -7,7 +7,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal class AssetController : IAssetController
     {

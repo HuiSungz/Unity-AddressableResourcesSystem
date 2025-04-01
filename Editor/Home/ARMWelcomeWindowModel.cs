@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     /// <summary>
     /// Model class for ARM Welcome Window

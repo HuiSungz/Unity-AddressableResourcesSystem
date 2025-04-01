@@ -9,7 +9,7 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.Video;
 using Object = UnityEngine.Object;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal static class TypedAssetLoader
     {

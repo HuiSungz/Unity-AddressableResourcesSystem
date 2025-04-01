@@ -10,7 +10,7 @@ using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal partial class SceneController
     {
@@ -94,7 +94,6 @@ namespace AddressableManage
                 loadSceneHandle = Addressables.LoadSceneAsync(sceneKey, loadMode, activateOnLoad);
                 
                 await MonitorLoadingProgress(loadSceneHandle, armOperationHandle, 0.1f, 0.9f);
-                await loadSceneHandle.ToUniTask();
                 sceneEntry.SceneHandle = loadSceneHandle;
                 
                 _registry.Scenes[sceneKey] = sceneEntry;
@@ -129,7 +128,6 @@ namespace AddressableManage
                 var unloadHandle = Addressables.UnloadSceneAsync(sceneEntry.SceneHandle);
                 
                 await MonitorLoadingProgress(unloadHandle, armOperationHandle, 0f, 1f);
-                await unloadHandle.ToUniTask();
                 
                 Verbose.D($"Scene unloaded: {sceneKey}");
                 

@@ -1,37 +1,21 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     /// <summary>
     /// Editor window for managing ARM debug settings
     /// </summary>
     public class ARMDebugWindow : EditorWindow
     {
-        // Singleton instance
-        private static ARMDebugWindow _instance;
-        
-        // Presenter instance
-        private ARMDebugPresenter _presenter;
-        
-        // UI styles
-        private GUIStyle _headerStyle;
-        private GUIStyle _boxStyle;
-        private GUIStyle _toggleStyle;
-        private GUIStyle _descriptionStyle;
-        private GUIStyle _symbolButtonStyle;
-        private GUIStyle _symbolBoxStyle;
-        
-        // Scroll position for symbols list
-        private Vector2 _symbolsScrollPosition;
-        
-        // Build target selection index
-        private int _selectedBuildTargetIndex;
-        private readonly string[] _buildTargetNames = new string[]
+        #region Fields
+
+        private readonly string[] _buildTargetNames = 
         {
             "Standalone", "iOS", "Android", "WebGL", "Windows Store"
         };
-        private readonly BuildTargetGroup[] _buildTargetGroups = new BuildTargetGroup[]
+        
+        private readonly BuildTargetGroup[] _buildTargetGroups = 
         {
             BuildTargetGroup.Standalone,
             BuildTargetGroup.iOS,
@@ -40,27 +24,35 @@ namespace AddressableManage.Editor
             BuildTargetGroup.WSA
         };
         
-        /// <summary>
-        /// Menu item to open the window
-        /// </summary>
-        [MenuItem("ARM/Debug Settings")]
+        private static ARMDebugWindow _instance;
+        private ARMDebugPresenter _presenter;
+
+        private GUIStyle _headerStyle;
+        private GUIStyle _boxStyle;
+        private GUIStyle _toggleStyle;
+        private GUIStyle _descriptionStyle;
+        private GUIStyle _symbolButtonStyle;
+        private GUIStyle _symbolBoxStyle;
+
+        private Vector2 _symbolsScrollPosition;
+
+        private int _selectedBuildTargetIndex;
+
+        #endregion
+        
+        [MenuItem("ArchitectHS/ARM/Debug Settings")]
         public static void ShowWindow()
         {
             _instance = GetWindow<ARMDebugWindow>("ARM Debug Settings");
             _instance.minSize = new Vector2(400, 450);
             _instance.maxSize = new Vector2(600, 450);
         }
-        
-        /// <summary>
-        /// Called when window is enabled
-        /// </summary>
+
         private void OnEnable()
         {
-            // Create presenter and connect events
             _presenter = new ARMDebugPresenter();
             _presenter.OnStateChanged += Repaint;
             
-            // Find index for current build target
             UpdateBuildTargetIndex();
         }
         
@@ -75,68 +67,47 @@ namespace AddressableManage.Editor
             }
         }
         
-        /// <summary>
-        /// Initialize UI styles
-        /// </summary>
         private void InitializeStyles()
         {
-            if (_headerStyle == null)
+            _headerStyle ??= new GUIStyle(EditorStyles.boldLabel)
             {
-                _headerStyle = new GUIStyle(EditorStyles.boldLabel)
-                {
-                    fontSize = 14,
-                    alignment = TextAnchor.MiddleCenter,
-                    margin = new RectOffset(0, 0, 10, 10)
-                };
-            }
+                fontSize = 14,
+                alignment = TextAnchor.MiddleCenter,
+                margin = new RectOffset(0, 0, 10, 10)
+            };
             
-            if (_boxStyle == null)
+            _boxStyle ??= new GUIStyle(EditorStyles.helpBox)
             {
-                _boxStyle = new GUIStyle(EditorStyles.helpBox)
-                {
-                    padding = new RectOffset(15, 15, 15, 15),
-                    margin = new RectOffset(10, 10, 10, 10)
-                };
-            }
+                padding = new RectOffset(15, 15, 15, 15),
+                margin = new RectOffset(10, 10, 10, 10)
+            };
             
-            if (_toggleStyle == null)
+            _toggleStyle ??= new GUIStyle(EditorStyles.toggle)
             {
-                _toggleStyle = new GUIStyle(EditorStyles.toggle)
-                {
-                    fontSize = 12,
-                    fontStyle = FontStyle.Bold
-                };
-            }
+                fontSize = 12,
+                fontStyle = FontStyle.Bold
+            };
             
-            if (_descriptionStyle == null)
+            _descriptionStyle ??= new GUIStyle(EditorStyles.label)
             {
-                _descriptionStyle = new GUIStyle(EditorStyles.label)
-                {
-                    wordWrap = true,
-                    fontSize = 11,
-                    margin = new RectOffset(20, 20, 10, 10)
-                };
-            }
+                wordWrap = true,
+                fontSize = 11,
+                margin = new RectOffset(20, 20, 10, 10)
+            };
             
-            if (_symbolButtonStyle == null)
+            _symbolButtonStyle ??= new GUIStyle(EditorStyles.miniButton)
             {
-                _symbolButtonStyle = new GUIStyle(EditorStyles.miniButton)
-                {
-                    alignment = TextAnchor.MiddleLeft,
-                    fixedHeight = 22,
-                    margin = new RectOffset(2, 2, 1, 1),
-                    padding = new RectOffset(5, 5, 3, 3)
-                };
-            }
+                alignment = TextAnchor.MiddleLeft,
+                fixedHeight = 22,
+                margin = new RectOffset(2, 2, 1, 1),
+                padding = new RectOffset(5, 5, 3, 3)
+            };
             
-            if (_symbolBoxStyle == null)
+            _symbolBoxStyle ??= new GUIStyle(EditorStyles.helpBox)
             {
-                _symbolBoxStyle = new GUIStyle(EditorStyles.helpBox)
-                {
-                    padding = new RectOffset(2, 2, 2, 2),
-                    margin = new RectOffset(0, 0, 5, 5)
-                };
-            }
+                padding = new RectOffset(2, 2, 2, 2),
+                margin = new RectOffset(0, 0, 5, 5)
+            };
         }
         
         /// <summary>

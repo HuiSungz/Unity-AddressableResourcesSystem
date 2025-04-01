@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.AddressableAssets;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     /// <summary>
     /// Extension methods for label management in the ARM system

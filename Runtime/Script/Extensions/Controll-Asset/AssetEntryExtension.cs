@@ -2,7 +2,7 @@
 #if ARM_UNITASK
 using UnityEngine;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     public static class AssetEntryExtension
     {

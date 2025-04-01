@@ -4,7 +4,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     /// <summary>
     /// Represents a loaded scene with its handle and state information

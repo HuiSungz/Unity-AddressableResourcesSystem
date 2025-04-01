@@ -1,7 +1,7 @@
 
 using System;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     public sealed partial class ARM
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal class AssetRegistry : IAssetRegistry
     {

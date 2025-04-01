@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     /// <summary>
     /// Processor class that runs on domain reload to verify and setup UniTask
