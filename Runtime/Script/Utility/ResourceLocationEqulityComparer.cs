@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     /// <summary>
     /// IResourceLocation에 대한 내용 기반 동등성 비교기

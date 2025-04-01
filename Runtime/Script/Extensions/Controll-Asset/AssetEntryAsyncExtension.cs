@@ -3,7 +3,7 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     public static class AssetEntryAsyncExtension
     {

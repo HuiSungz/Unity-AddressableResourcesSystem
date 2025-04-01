@@ -1,7 +1,7 @@
 
 using UnityEditor;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     /// <summary>
     /// Processor class that handles showing welcome window

@@ -1,7 +1,7 @@
 using System;
 using UnityEditor;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     /// <summary>
     /// Presenter class for ARM Debug Settings Window

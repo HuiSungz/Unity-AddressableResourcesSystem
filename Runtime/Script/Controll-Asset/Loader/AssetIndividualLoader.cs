@@ -7,7 +7,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal class AssetIndividualLoader : AssetLoaderBase
     {

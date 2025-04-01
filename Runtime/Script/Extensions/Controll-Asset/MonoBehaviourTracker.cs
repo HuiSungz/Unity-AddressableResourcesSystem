@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal class MonoBehaviourTracker : MonoBehaviour
     {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal static class HandleTrackingSystem
     {

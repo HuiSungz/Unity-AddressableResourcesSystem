@@ -6,7 +6,7 @@ using UnityEngine.AddressableAssets.ResourceLocators;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Cysharp.Threading.Tasks;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     public sealed partial class ARM
     {

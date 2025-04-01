@@ -6,40 +6,38 @@ using UnityEngine;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     public class ARMTrackerWindow : EditorWindow
     {
         // Singleton instance
         private static ARMTrackerWindow _instance;
-        
-        // Settings and data manager
+
         private ARMTrackerSettings _settings;
         private ARMTrackerReflectionData _data;
-        
-        // UI state variables
+
         private Vector2 _assetListScrollPosition;
         private Vector2 _detailScrollPosition;
         private float _splitViewPosition = 500f;
         private AssetEntryProxy _selectedEntry;
         private string _searchText = "";
-        private bool _initialized = false;
+        private bool _initialized;
         
         // UI settings
-        private readonly Color _evenRowColor = new Color(0.8f, 0.8f, 0.8f, 0.1f);
-        private readonly Color _oddRowColor = new Color(0.8f, 0.8f, 0.8f, 0.2f);
-        private readonly Color _selectedRowColor = new Color(0.3f, 0.7f, 0.9f, 0.4f);
-        private readonly Color _batchLoadedColor = new Color(1f, 0.6f, 0.2f, 0.8f);
-        private readonly Color _individualLoadedColor = new Color(0.2f, 0.9f, 0.4f, 0.8f);
+        private readonly Color _evenRowColor = new(0.8f, 0.8f, 0.8f, 0.1f);
+        private readonly Color _oddRowColor = new(0.8f, 0.8f, 0.8f, 0.2f);
+        private readonly Color _selectedRowColor = new(0.3f, 0.7f, 0.9f, 0.4f);
+        private readonly Color _batchLoadedColor = new(1f, 0.6f, 0.2f, 0.8f);
+        private readonly Color _individualLoadedColor = new(0.2f, 0.9f, 0.4f, 0.8f);
         private GUIStyle _headerStyle;
         private GUIStyle _boldLabelStyle;
         private GUIStyle _assetRowStyle;
         private GUIStyle _centeredLabelStyle;
-        
-        // Refresh timer
+
         private double _lastRefreshTime;
+        private bool _resizing;
         
-        [MenuItem("ARM/Reference Tracker")]
+        [MenuItem("ArchitectHS/ARM/Reference Tracker")]
         public static void ShowWindow()
         {
             _instance = GetWindow<ARMTrackerWindow>("ARM Tracker");
@@ -62,12 +60,14 @@ namespace AddressableManage.Editor
         
         private void InitializeIfNeeded()
         {
-            if (!_initialized)
+            if (_initialized)
             {
-                _settings = ARMTrackerSettings.LoadSettings();
-                _data = new ARMTrackerReflectionData();
-                _initialized = true;
+                return;
             }
+            
+            _settings = ARMTrackerSettings.LoadSettings();
+            _data = new ARMTrackerReflectionData();
+            _initialized = true;
         }
 
         private void CleanupData()
@@ -95,10 +95,7 @@ namespace AddressableManage.Editor
                     break;
 
                 case PlayModeStateChange.ExitingPlayMode:
-                    if (_data != null)
-                    {
-                        _data.Reset();
-                    }
+                    _data?.Reset();
                     _selectedEntry = null;
                     break;
 
@@ -114,54 +111,45 @@ namespace AddressableManage.Editor
             if (!EditorApplication.isPlaying || _data == null)
                 return;
                 
-            double currentTime = EditorApplication.timeSinceStartup;
-            if (currentTime - _lastRefreshTime >= _settings.RefreshInterval)
+            var currentTime = EditorApplication.timeSinceStartup;
+            if (!(currentTime - _lastRefreshTime >= _settings.RefreshInterval))
             {
-                _lastRefreshTime = currentTime;
-                try
-                {
-                    _data.Refresh();
-                    Repaint();
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"[ARM Tracker] Error during refresh: {ex.Message}");
-                }
+                return;
+            }
+            
+            _lastRefreshTime = currentTime;
+            
+            try
+            {
+                _data.Refresh();
+                Repaint();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[ARM Tracker] Error during refresh: {ex.Message}");
             }
         }
         
         private void InitializeStyles()
         {
-            if (_headerStyle == null)
+            _headerStyle ??= new GUIStyle(EditorStyles.boldLabel)
             {
-                _headerStyle = new GUIStyle(EditorStyles.boldLabel)
-                {
-                    alignment = TextAnchor.MiddleLeft,
-                    fontSize = 12
-                };
-            }
+                alignment = TextAnchor.MiddleLeft,
+                fontSize = 12
+            };
             
-            if (_boldLabelStyle == null)
-            {
-                _boldLabelStyle = new GUIStyle(EditorStyles.boldLabel);
-            }
+            _boldLabelStyle ??= new GUIStyle(EditorStyles.boldLabel);
             
-            if (_assetRowStyle == null)
+            _assetRowStyle ??= new GUIStyle(EditorStyles.label)
             {
-                _assetRowStyle = new GUIStyle(EditorStyles.label)
-                {
-                    padding = new RectOffset(5, 5, 3, 3),
-                    margin = new RectOffset(0, 0, 0, 0)
-                };
-            }
+                padding = new RectOffset(5, 5, 3, 3),
+                margin = new RectOffset(0, 0, 0, 0)
+            };
             
-            if (_centeredLabelStyle == null)
+            _centeredLabelStyle ??= new GUIStyle(EditorStyles.label)
             {
-                _centeredLabelStyle = new GUIStyle(EditorStyles.label)
-                {
-                    alignment = TextAnchor.MiddleCenter
-                };
-            }
+                alignment = TextAnchor.MiddleCenter
+            };
         }
         
         private void OnGUI()
@@ -473,7 +461,7 @@ namespace AddressableManage.Editor
             
             if (EditorApplication.isPlaying)
             {
-                GUILayout.Label($"Last Updated: {DateTime.Now.ToString("HH:mm:ss")}");
+                GUILayout.Label($"Last Updated: {DateTime.Now:HH:mm:ss}");
             }
             else
             {
@@ -483,7 +471,7 @@ namespace AddressableManage.Editor
             EditorGUILayout.EndHorizontal();
         }
         
-        private float ResizeSplitView(float currentPosition, float minSize, float maxSize)
+        private float ResizeSplitView(float currentPosition, float paramMinSize, float paramMaxSize)
         {
             Rect resizeRect = new Rect(currentPosition, 0, 5f, position.height);
             EditorGUIUtility.AddCursorRect(resizeRect, MouseCursor.ResizeHorizontal);
@@ -496,7 +484,7 @@ namespace AddressableManage.Editor
             
             if (_resizing && Event.current.type == EventType.MouseDrag)
             {
-                currentPosition = Mathf.Clamp(Event.current.mousePosition.x, minSize, maxSize);
+                currentPosition = Mathf.Clamp(Event.current.mousePosition.x, paramMinSize, paramMaxSize);
                 Event.current.Use();
                 Repaint();
             }
@@ -507,15 +495,12 @@ namespace AddressableManage.Editor
                 _resizing = false;
             }
             
-            // Visualize resize handle
-            Color oldColor = GUI.color;
+            var oldColor = GUI.color;
             GUI.color = Color.grey;
             GUI.DrawTexture(resizeRect, EditorGUIUtility.whiteTexture);
             GUI.color = oldColor;
             
             return currentPosition;
         }
-        
-        private bool _resizing = false;
     }
 }

@@ -2,7 +2,7 @@
 using System;
 using UnityEditor;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     public class ARMDebugModel
     {

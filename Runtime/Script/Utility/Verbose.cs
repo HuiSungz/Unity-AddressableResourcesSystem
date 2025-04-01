@@ -2,7 +2,7 @@
 using System;
 using System.Diagnostics;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     internal static class Verbose
     {

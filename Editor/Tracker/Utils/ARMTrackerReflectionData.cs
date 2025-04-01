@@ -8,7 +8,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceLocations;
 using UnityEngine.SceneManagement;
 
-namespace AddressableManage.Editor
+namespace ArchitectHS.AddressableManage.Editor
 {
     /// <summary>
     /// Wrapper class for asset entries, using reflection to access internal data.
@@ -181,7 +181,7 @@ namespace AddressableManage.Editor
                     try
                     {
                         var types = assembly.GetTypes()
-                            .Where(t => t.Namespace == "AddressableManage" && t.Name == "ARM")
+                            .Where(t => t.Namespace == "ArchitectHS.AddressableManage" && t.Name == "ARM")
                             .ToArray();
                             
                         if (types.Length > 0)
@@ -204,7 +204,7 @@ namespace AddressableManage.Editor
                     try 
                     {
                         var mainAssembly = Assembly.Load("Assembly-CSharp");
-                        _armType = mainAssembly.GetType("AddressableManage.ARM");
+                        _armType = mainAssembly.GetType("ArchitectHS.AddressableManage.ARM");
                         Debug.Log($"[ARM Tracker] Found ARM type using fallback: {_armType?.FullName}");
                     }
                     catch (Exception ex)

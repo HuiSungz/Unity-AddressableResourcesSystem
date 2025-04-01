@@ -1,9 +1,9 @@
 {
-    "name": "AddressableManage.Editor",
+    "name": "ArchitectHS.AddressableManage.Editor",
     "rootNamespace": "",
     "references": [
-        "AddressableManage",
-        "Unity.ResourceManager"
+        "Unity.ResourceManager",
+        "ArchitectHS.AddressableManage"
     ],
     "includePlatforms": [
         "Editor"

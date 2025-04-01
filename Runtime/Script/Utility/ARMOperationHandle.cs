@@ -3,7 +3,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace AddressableManage
+namespace ArchitectHS.AddressableManage
 {
     public class ARMOperationHandle<T>
     {
